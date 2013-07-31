@@ -27,7 +27,7 @@ object SbtIdeaBuild extends Build with BuildExtra {
     libraryDependencies ++= Seq(
       "commons-io" % "commons-io" % "2.0.1"
     )
-  ) ++ addSbtPlugin("org.scala-sbt" % "sbt-android" % "0.6.4" % "provided") ++
+  ) ++ addSbtPlugin("org.scala-sbt" % "sbt-android" % "0.7-SNAPSHOT" % "provided") ++
     addSbtPlugin("com.hanhuy.sbt" % "android-sdk-plugin" % "0.7.6" % "provided")
 
   def extraPom = (

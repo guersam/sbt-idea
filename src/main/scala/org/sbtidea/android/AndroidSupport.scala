@@ -70,22 +70,23 @@ trait AndroidSupport {
 
 /** support for "scala-sbt.org" % "sbt-android" */
 case class SbtAndroid(projectDefinition: ProjectDefinition[ProjectRef], projectRoot: File, buildStruct: BuildStructure, settings: Settings) extends AndroidSupport {
+  import sbtandroid.AndroidPlugin
+  import AndroidPlugin._
+
   def isAndroidProject: Boolean = allCatch.opt {
     val settingLabelsInUse = projectDefinition.settings.map(_.key.key.label)
-    settingLabelsInUse.contains(sbtandroid.AndroidKeys.platformName.key.label)
+    settingLabelsInUse.contains(AndroidPlugin.platformName.key.label)
   }.getOrElse(false)
 
   def facet = {
-    import sbtandroid.AndroidKeys._
-    val manifest: File = settings.optionalSetting(manifestTemplatePath in Android).getOrElse(settings.task(manifestPath in Android).head)
+    val manifest: File = settings.optionalSetting(manifestTemplatePath in Compile).getOrElse(settings.task(manifestPath in Compile).head)
 
-    getFacet(manifest, None, settings.task(mainResPath in Android), setting(mainAssetsPath in Android), setting(Keys.sourceDirectory in Android) / "libs", setting(managedJavaPath in Android), false, generateTypedResources)
+    getFacet(manifest, None, settings.task(mainResPath in Compile), setting(mainAssetsPath in Compile), setting(Keys.sourceDirectory) / "libs", setting(managedJavaPath in Compile), false, generateTypedResources)
   }
 
   lazy val platformVersion = {
-    import sbtandroid.AndroidKeys._
     val props = new Properties()
-    props.load(new FileReader((setting(platformPath in Android) / "source.properties").asFile))
+    props.load(new FileReader((setting(platformPath) / "source.properties").asFile))
     props.getProperty("Platform.Version")
   }
 }
